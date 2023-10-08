@@ -10,7 +10,7 @@
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>com.peterczigany</groupId>
-  <artifactId>student</artifactId>
+  <artifactId>profile-service</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>Student Application</name>
   <description>A Maven multi-module Spring Boot application</description>
