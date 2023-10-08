@@ -1,4 +1,4 @@
-package com.peterczigany.studentservice;
+package com.peterczigany.profileservice;
 
 import java.util.UUID;
 import org.assertj.core.api.Assertions;

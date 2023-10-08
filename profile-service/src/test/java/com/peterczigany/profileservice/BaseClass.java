@@ -1,4 +1,4 @@
-package com.peterczigany.studentservice;
+package com.peterczigany.profileservice;
 
 
 import io.restassured.RestAssured;
@@ -15,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
+import reactor.core.publisher.Flux;
 
 @AutoConfigureMockMvc
 @Import(StudentHttpConfiguration.class)
@@ -36,7 +37,7 @@ public class BaseClass {
   @BeforeEach
   public void before() throws Exception {
     Mockito.when(this.repository.findAll()).thenReturn(
-        List.of(
+        Flux.just(
             new Student(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"), "Joe",
                 "joe@school.com"),
             new Student(UUID.fromString("123e4567-e89b-12d3-a456-426614174001"), "Ashley",
