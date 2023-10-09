@@ -1,4 +1,4 @@
-package com.peterczigany.profileservice;
+package com.peterczigany.profileservice.model;
 
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -8,8 +8,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Table
 public class Student {
 

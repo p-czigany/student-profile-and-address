@@ -3,6 +3,9 @@ package com.peterczigany.profileservice;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import java.util.UUID;
+
+import com.peterczigany.profileservice.client.AddressClient;
+import com.peterczigany.profileservice.dto.Address;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

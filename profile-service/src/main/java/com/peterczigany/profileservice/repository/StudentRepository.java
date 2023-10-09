@@ -1,8 +1,8 @@
-package com.peterczigany.profileservice;
+package com.peterczigany.profileservice.repository;
 
 import java.util.UUID;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
-import org.springframework.stereotype.Repository;
 
-//@Repository
+import com.peterczigany.profileservice.model.Student;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+
 public interface StudentRepository extends ReactiveCrudRepository<Student, UUID> {}

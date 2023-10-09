@@ -1,4 +1,4 @@
-package com.peterczigany.profileservice;
+package com.peterczigany.profileservice.dto;
 
 import java.util.UUID;
 import lombok.AllArgsConstructor;

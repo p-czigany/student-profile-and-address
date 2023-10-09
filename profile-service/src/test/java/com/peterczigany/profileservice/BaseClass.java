@@ -1,5 +1,8 @@
 package com.peterczigany.profileservice;
 
+import com.peterczigany.profileservice.configuration.StudentHttpConfiguration;
+import com.peterczigany.profileservice.model.Student;
+import com.peterczigany.profileservice.repository.StudentRepository;
 import io.restassured.RestAssured;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;

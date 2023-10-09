@@ -1,5 +1,6 @@
-package com.peterczigany.profileservice;
+package com.peterczigany.profileservice.client;
 
+import com.peterczigany.profileservice.dto.Address;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
