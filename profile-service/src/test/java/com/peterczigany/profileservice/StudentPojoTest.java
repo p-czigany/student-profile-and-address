@@ -13,23 +13,27 @@ class StudentPojoTest {
   @Test
   void create() throws Exception {
 
-    Student student = new Student(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
-        "Joe Manganiello", "joemanganiello@school.com");
+    Student student =
+        new Student(
+            UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
+            "Joe Manganiello",
+            "joemanganiello@school.com");
     Assertions.assertThat(student.getName()).isEqualTo("Joe Manganiello");
     MatcherAssert.assertThat("joe manganiello", Matchers.equalToIgnoringCase("joe manganiello"));
-    MatcherAssert.assertThat(student.getName(), new BaseMatcher<>() {
+    MatcherAssert.assertThat(
+        student.getName(),
+        new BaseMatcher<>() {
 
-      @Override
-      public void describeTo(Description description) {
-        description.appendText("the name should be valid uppercase!");
-      }
+          @Override
+          public void describeTo(Description description) {
+            description.appendText("the name should be valid uppercase!");
+          }
 
-      @Override
-      public boolean matches(Object actual) {
-        return Character.isUpperCase(((String) actual).charAt(0));
-      }
-    });
+          @Override
+          public boolean matches(Object actual) {
+            return Character.isUpperCase(((String) actual).charAt(0));
+          }
+        });
     Assertions.assertThat(student.getName()).isEqualToIgnoringCase("joe manganiello");
   }
-
 }

@@ -1,4 +1,17 @@
+server:
+  port: 8088
 spring:
   h2:
     console:
       enabled: true
+  datasource:
+    url: r2dbc:h2:mem:///testdb;DB_CLOSE_DELAY=-1;
+    username: sa
+    driver-class-name: org.h2.Driver
+  liquibase:
+    url: jdbc:h2:mem:///testdb
+    user: sa
+    change-log: classpath:db.changelog/db.changelog-master.yaml
+    enabled: true
+
+#spring.data.r2dbc.repositories.enabled=true

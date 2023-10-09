@@ -18,5 +18,4 @@ public class AddressClient {
         .retrieve()
         .bodyToMono(Address.class);
   }
-
 }
