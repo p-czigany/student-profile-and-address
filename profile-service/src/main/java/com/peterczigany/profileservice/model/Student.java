@@ -1,5 +1,7 @@
 package com.peterczigany.profileservice.model;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;

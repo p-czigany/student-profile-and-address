@@ -1,10 +1,8 @@
 package com.peterczigany.profileservice;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.peterczigany.profileservice.model.Student;
 import com.peterczigany.profileservice.repository.StudentRepository;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +25,7 @@ class StudentEntityTest {
     Hooks.onOperatorDebug();
 
     List<String> statements =
-        Arrays.asList(
+        List.of(
             "DROP TABLE IF EXISTS student;",
             "CREATE table student (id UUID DEFAULT UUID(), name VARCHAR2, email VARCHAR2);");
 
@@ -69,8 +67,8 @@ class StudentEntityTest {
   }
 
   private void insertStudents() {
-    List<Student> students =
-        Arrays.asList(
+    Flux<Student> students =
+        Flux.just(
             new Student(null, "Joe", "joe@school.com"),
             new Student(null, "Ashley", "ashley@school.com"));
 

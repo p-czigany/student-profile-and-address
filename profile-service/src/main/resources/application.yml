@@ -4,14 +4,18 @@ spring:
   h2:
     console:
       enabled: true
+  rsocket:
+    server:
+      port: 7000
+      transport: tcp
   datasource:
-    url: r2dbc:h2:mem:///testdb;DB_CLOSE_DELAY=-1;
+    url: r2dbc:h2:mem://./testdb;DB_CLOSE_DELAY=-1;
     username: sa
     driver-class-name: org.h2.Driver
+  r2dbc:
+    initialization-mode: always
   liquibase:
-    url: jdbc:h2:mem:///testdb
+    url: jdbc:h2:mem://./testdb
     user: sa
     change-log: classpath:db.changelog/db.changelog-master.yaml
     enabled: true
-
-#spring.data.r2dbc.repositories.enabled=true
