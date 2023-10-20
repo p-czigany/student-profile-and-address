@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @WebFluxTest
 @Import(StudentHttpConfiguration.class)
@@ -25,7 +26,7 @@ class StudentHttpTest {
   @Test
   void getAllStudents() throws Exception {
 
-    Mockito.when(this.repository.findAll())
+    Mockito.when(repository.findAll())
         .thenReturn(
             Flux.just(
                 new Student(
@@ -52,5 +53,32 @@ class StudentHttpTest {
         .isEqualTo("Ashley");
   }
 
+  @Test
+  void addNewStudent() throws Exception {
+    Student student = new Student(null, "Joe", "joe@school.com");
 
+    Mockito.when(repository.save(student))
+        .thenReturn(
+            Mono.just(
+                new Student(
+                    UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
+                    "Joe",
+                    "joe@school.com")));
+
+    client
+        .post()
+        .uri("http://localhost:8080/students")
+        .body(Mono.just(student), Student.class)
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectHeader()
+        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON)
+        .expectBody()
+        .jsonPath("$.name")
+        .isEqualTo("Joe")
+        .jsonPath("$.email")
+        .isEqualTo("joe@school.com")
+    ;
+  }
 }

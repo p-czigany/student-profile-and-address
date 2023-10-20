@@ -50,9 +50,16 @@ class StudentEntityTest {
     Flux<Student> retrievedStudents = repository.saveAll(students);
 
     StepVerifier.create(retrievedStudents)
-        .expectNextCount(1)
-        .expectNextMatches(student -> student.getName().equals("Ashley"))
-        .verifyComplete();
+        .assertNext(
+            student -> {
+              assert "Joe".equals(student.getName()) : "First student's name is not Joe";
+            })
+        .assertNext(
+            student -> {
+              assert student.getId() != null : "Second student's id is null";
+            })
+        .expectComplete()
+        .verify();
   }
 
   @Test
