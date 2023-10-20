@@ -1,0 +1,1 @@
+CREATE table IF NOT EXISTS student (id UUID DEFAULT UUID(), name VARCHAR2, email VARCHAR2);
