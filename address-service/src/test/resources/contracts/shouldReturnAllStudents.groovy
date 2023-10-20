@@ -6,17 +6,16 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 
 Contract.make {
-    description("Should return all students")
+    description("Should return all addresses")
     request {
-        url("/students")
+        url("/address")
         method(HttpMethods.GET)
     }
     response {
         status(HttpStatus.OK.value())
-        body([
-                [id: UUID.fromString("123e4567-e89b-12d3-a456-426614174000"), name: "Joe", email: "joe@school.com"],
-                [id: UUID.fromString("123e4567-e89b-12d3-a456-426614174001"), name: "Ashley", email: "ashley@school.com"]
-        ])
+        body(
+            id: UUID.fromString("123e4567-e89b-12d3-a456-426614174010"), address: "address placeholder"
+        )
         headers {
             contentType(MediaType.APPLICATION_JSON_VALUE)
         }

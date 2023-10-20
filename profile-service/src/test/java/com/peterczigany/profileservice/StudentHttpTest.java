@@ -1,10 +1,9 @@
 package com.peterczigany.profileservice;
 
-import java.util.UUID;
-
 import com.peterczigany.profileservice.configuration.StudentHttpConfiguration;
 import com.peterczigany.profileservice.model.Student;
 import com.peterczigany.profileservice.repository.StudentRepository;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;

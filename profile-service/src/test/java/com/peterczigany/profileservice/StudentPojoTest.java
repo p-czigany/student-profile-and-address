@@ -1,8 +1,7 @@
 package com.peterczigany.profileservice;
 
-import java.util.UUID;
-
 import com.peterczigany.profileservice.model.Student;
+import java.util.UUID;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;

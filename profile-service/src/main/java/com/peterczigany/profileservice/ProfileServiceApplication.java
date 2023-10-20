@@ -14,16 +14,16 @@ import org.springframework.web.reactive.function.client.WebClient;
 @ComponentScan(basePackages = "com.peterczigany.profileservice")
 public class ProfileServiceApplication {
 
-  @Bean
-  ConnectionFactoryInitializer initializer(ConnectionFactory connectionFactory) {
-
-    ConnectionFactoryInitializer initializer = new ConnectionFactoryInitializer();
-    initializer.setConnectionFactory(connectionFactory);
-    initializer.setDatabasePopulator(
-        new ResourceDatabasePopulator(new ClassPathResource("schema.sql")));
-
-    return initializer;
-  }
+//  @Bean
+//  ConnectionFactoryInitializer initializer(ConnectionFactory connectionFactory) {
+//
+//    ConnectionFactoryInitializer initializer = new ConnectionFactoryInitializer();
+//    initializer.setConnectionFactory(connectionFactory);
+//    initializer.setDatabasePopulator(
+//        new ResourceDatabasePopulator(new ClassPathResource("schema.sql")));
+//
+//    return initializer;
+//  }
 
   @Bean
   public WebClient.Builder webClientBuilder() {

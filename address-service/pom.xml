@@ -20,6 +20,10 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
 
@@ -31,6 +35,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.projectreactor</groupId>
+			<artifactId>reactor-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -56,10 +65,13 @@
 			<plugin>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-contract-maven-plugin</artifactId>
-				<version>4.0.4</version>
 				<extensions>true</extensions>
+				<version>4.0.4</version>
 				<configuration>
-					<testFramework>JUNIT5</testFramework>
+					<baseClassForTests>
+						com.peterczigany.addressservice.BaseClass
+					</baseClassForTests>
+					<testMode>EXPLICIT</testMode>
 				</configuration>
 			</plugin>
 			<plugin>
