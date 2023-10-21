@@ -53,26 +53,48 @@ class StudentHttpIntegrationTest {
   }
 
   @Test
-  void testGetAfterPost() {
-    Student student = new Student(null, "Edward Sapir", "sapir@school.com");
+  void testSuccessfulPost() {
+    var returnedStudent =
+        testClient
+            .post()
+            .uri("/students")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue("{\"name\": \"Reya\", \"email\": \"reya@avernus.com\"}")
+            .exchange()
+            .expectStatus()
+            .isOk()
+            .expectBody(Student.class)
+            .returnResult()
+            .getResponseBody();
 
+    assert returnedStudent != null;
+    Assertions.assertThat(returnedStudent.getName()).isEqualTo("Reya");
+    Assertions.assertThat(returnedStudent.getEmail()).isEqualTo("reya@avernus.com");
+  }
+
+  @Test
+  void testGetAfterPost() {
     testClient
         .post()
         .uri("/students")
-        .body(Mono.just(student), Student.class)
+        .contentType(MediaType.APPLICATION_JSON)
+        .bodyValue("{\"name\": \"Vestri\", \"email\": \"vestri@avernus.com\"}")
         .exchange()
         .expectStatus()
         .isOk();
 
-    var returned = testClient
-        .get()
-        .uri("/students")
-        .exchange()
-        .expectStatus()
-        .isOk()
-        .expectHeader()
-        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON)
-        .expectBodyList(Student.class).returnResult().getResponseBody();
+    var returned =
+        testClient
+            .get()
+            .uri("/students")
+            .exchange()
+            .expectStatus()
+            .isOk()
+            .expectHeader()
+            .contentTypeCompatibleWith(MediaType.APPLICATION_JSON)
+            .expectBodyList(Student.class)
+            .returnResult()
+            .getResponseBody();
 
     Assertions.assertThat(returned).hasAtLeastOneElementOfType(Student.class);
   }
