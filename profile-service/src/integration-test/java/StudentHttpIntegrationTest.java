@@ -1,5 +1,6 @@
 import com.peterczigany.profileservice.ProfileServiceApplication;
 import com.peterczigany.profileservice.model.Student;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -49,5 +50,30 @@ class StudentHttpIntegrationTest {
         .exchange()
         .expectStatus()
         .isEqualTo(responseStatus);
+  }
+
+  @Test
+  void testGetAfterPost() {
+    Student student = new Student(null, "Edward Sapir", "sapir@school.com");
+
+    testClient
+        .post()
+        .uri("/students")
+        .body(Mono.just(student), Student.class)
+        .exchange()
+        .expectStatus()
+        .isOk();
+
+    var returned = testClient
+        .get()
+        .uri("/students")
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectHeader()
+        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON)
+        .expectBodyList(Student.class).returnResult().getResponseBody();
+
+    Assertions.assertThat(returned).hasAtLeastOneElementOfType(Student.class);
   }
 }
