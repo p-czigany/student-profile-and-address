@@ -119,7 +119,33 @@ class StudentHttpIntegrationTest {
     assert returnedStudent != null;
     Assertions.assertThat(returnedStudent.getName()).isEqualTo("Reya");
     Assertions.assertThat(returnedStudent.getEmail()).isEqualTo("reya@avernus.com");
-    Assertions.assertThat(returnedStudent.getId())
-        .isNotEqualByComparingTo(UUID.fromString("0891583f-8d86-43bf-b6ef-941728820f0f"));
+    Assertions.assertThat(returnedStudent.getId()).isNotEqualTo(UUID.fromString("0891583f-8d86-43bf-b6ef-941728820f0f"));
+  }
+
+  @Test
+  void testPostWithSameIdShouldNotUpdate() {
+    var returnedStudent = testClient
+        .post()
+        .uri("/students")
+        .contentType(MediaType.APPLICATION_JSON)
+        .bodyValue("{\"name\": \"Vestri\", \"email\": \"vestri@avernus.com\"}")
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody(Student.class).returnResult().getResponseBody();
+
+    assert returnedStudent != null;
+    var secondReturnedStudent = testClient
+        .post()
+        .uri("/students")
+        .contentType(MediaType.APPLICATION_JSON)
+        .bodyValue(String.format("{\"id\": \"%s\", \"name\": \"Vestri\", \"email\": \"vestri@avernus.com\"}", returnedStudent.getId()))
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody(Student.class).returnResult().getResponseBody();
+
+    assert secondReturnedStudent != null;
+    Assertions.assertThat(secondReturnedStudent.getId()).isNotEqualTo(returnedStudent.getId());
   }
 }
