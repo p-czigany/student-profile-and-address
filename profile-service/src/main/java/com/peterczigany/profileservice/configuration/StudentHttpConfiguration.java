@@ -43,7 +43,7 @@ public class StudentHttpConfiguration {
               Errors errors = new BeanPropertyBindingResult(body, Student.class.getName());
               validator.validate(body, errors);
               if (errors.getAllErrors().isEmpty()) {
-                return requestMono.flatMap(repository::save);
+                return repository.save(body);
               } else {
                 throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, errors.getAllErrors().toString());
