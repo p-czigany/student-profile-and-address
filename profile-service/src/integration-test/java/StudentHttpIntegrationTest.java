@@ -1,9 +1,12 @@
 import com.peterczigany.profileservice.ProfileServiceApplication;
 import com.peterczigany.profileservice.model.Student;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,11 +41,38 @@ class StudentHttpIntegrationTest {
         .hasSize(0);
   }
 
-  @Test
+  @ParameterizedTest
+  @CsvSource({
+    "Edward Sapir,sapir@school.com",
+    "Annabelle,annabelle@school.com",
+    "Benjamin Lee Whorf,whorf@school.com",
+    "Anatoly Khazanov,khazanov@school.com",
+    "Claude Lévi-Strauss,levi-strauss@school.com"
+  })
   @Order(2)
-  void givenStudents_whenGetStudents_thenReturnStudentList() {
+  void shouldReturnSameNameAndEmail_whenStudentIsPosted(String name, String email) {
+    Student student = new Student(null, name, email);
+    Student response =
+        testClient
+            .post()
+            .uri("/students")
+            .body(Mono.just(student), Student.class)
+            .exchange()
+            .expectStatus()
+            .isOk()
+            .expectHeader()
+            .contentTypeCompatibleWith(MediaType.APPLICATION_JSON)
+            .expectBody(Student.class)
+            .returnResult()
+            .getResponseBody();
+    assert response != null;
+    Assertions.assertThat(response.getName()).isEqualTo(student.getName());
+    Assertions.assertThat(response.getEmail()).isEqualTo(student.getEmail());
+  }
 
-    createABunchOfStudents();
+  @Test
+  @Order(3)
+  void givenStudents_whenGetStudents_thenReturnStudentList() {
 
     testClient
         .get()
@@ -54,18 +84,5 @@ class StudentHttpIntegrationTest {
         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON)
         .expectBodyList(Student.class)
         .hasSize(5);
-  }
-
-  private void createABunchOfStudents() {
-    createTestStudent("Edward Sapir", "sapir@school.com");
-    createTestStudent("Annabelle", "annabelle@school.com");
-    createTestStudent("Benjamin Lee Whorf", "whorf@school.com");
-    createTestStudent("Anatoly Khazanov", "khazanov@school.com");
-    createTestStudent("Claude Lévi-Strauss", "levi-strauss@school.com");
-  }
-
-  private void createTestStudent(String name, String email) {
-    Student student = new Student(null, name, email);
-    testClient.post().uri("/students").body(Mono.just(student), Student.class).exchange();
   }
 }
