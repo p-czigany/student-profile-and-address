@@ -1,6 +1,5 @@
 import com.peterczigany.profileservice.ProfileServiceApplication;
 import com.peterczigany.profileservice.model.Student;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -36,9 +35,7 @@ class StudentHttpIntegrationTest {
   }
 
   @ParameterizedTest
-  @CsvSource({
-    "Edward Sapir,sapir@school.com,200"
-  })
+  @CsvSource({"Edward Sapir,sapir@school.com,200", "Claude Lévi-Strauss,lévi@strauss@school,400"})
   void testPost(String name, String email, int responseStatus) {
     Student student = new Student(null, name, email);
     testClient
