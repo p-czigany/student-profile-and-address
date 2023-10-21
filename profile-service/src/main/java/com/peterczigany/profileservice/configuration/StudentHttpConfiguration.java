@@ -4,9 +4,11 @@ package com.peterczigany.profileservice.configuration;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
+import com.peterczigany.profileservice.dto.StudentDTO;
 import com.peterczigany.profileservice.model.Student;
 import com.peterczigany.profileservice.repository.StudentRepository;
 import com.peterczigany.profileservice.validator.StudentValidator;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,26 +26,27 @@ import reactor.core.publisher.Mono;
 @Configuration
 public class StudentHttpConfiguration {
 
-  @Autowired StudentRepository repository;
+  private static final ModelMapper modelMapper = new ModelMapper();
 
   @Bean
-  RouterFunction<ServerResponse> routes(/*@Autowired StudentRepository repository*/ ) {
+  RouterFunction<ServerResponse> routes(@Autowired StudentRepository repository) {
     return route()
         .GET("/students", request -> ok().body(repository.findAll(), Student.class))
-        .POST("/students", this::handlePostRequest)
+        .POST("/students", request -> handlePostRequest(request, repository))
         .build();
   }
 
-  private Mono<ServerResponse> handlePostRequest(ServerRequest request) {
+  private Mono<ServerResponse> handlePostRequest(
+      ServerRequest request, StudentRepository repository) {
     Validator validator = new StudentValidator();
-    Mono<Student> requestMono = request.bodyToMono(Student.class);
+    Mono<StudentDTO> requestMono = request.bodyToMono(StudentDTO.class);
     Mono<Student> responseBody =
         requestMono.flatMap(
             body -> {
-              Errors errors = new BeanPropertyBindingResult(body, Student.class.getName());
+              Errors errors = new BeanPropertyBindingResult(body, StudentDTO.class.getName());
               validator.validate(body, errors);
               if (errors.getAllErrors().isEmpty()) {
-                return repository.save(body);
+                return repository.save(modelMapper.map(body, Student.class));
               } else {
                 throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, errors.getAllErrors().toString());

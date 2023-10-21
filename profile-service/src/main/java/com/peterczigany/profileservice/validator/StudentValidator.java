@@ -1,5 +1,6 @@
 package com.peterczigany.profileservice.validator;
 
+import com.peterczigany.profileservice.dto.StudentDTO;
 import com.peterczigany.profileservice.model.Student;
 import java.util.regex.Pattern;
 import org.springframework.validation.Errors;
@@ -19,7 +20,7 @@ public class StudentValidator implements Validator {
   public void validate(Object target, Errors errors) {
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "field.required");
     ValidationUtils.rejectIfEmptyOrWhitespace(errors, EMAIL, "field.required");
-    Student student = (Student) target;
+    StudentDTO student = (StudentDTO) target;
     if (student.getEmail() != null
         && !Pattern.compile(
                 "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$")
