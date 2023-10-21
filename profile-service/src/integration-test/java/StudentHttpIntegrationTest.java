@@ -35,7 +35,11 @@ class StudentHttpIntegrationTest {
   }
 
   @ParameterizedTest
-  @CsvSource({"Edward Sapir,sapir@school.com,200", "Claude Lévi-Strauss,lévi@strauss@school,400"})
+  @CsvSource({
+    "Edward Sapir,sapir@school.com,200",
+    "Claude Lévi-Strauss,lévi@strauss@school,400",
+    ",anonymus@school.com,400"
+  })
   void testPost(String name, String email, int responseStatus) {
     Student student = new Student(null, name, email);
     testClient
