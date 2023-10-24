@@ -178,7 +178,7 @@ class StudentHttpIntegrationTest {
     var returnedModifiedStudent =
         testClient
             .patch()
-            .uri("/students" + returnedStudent.getId())
+            .uri("/students/" + returnedStudent.getId())
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue("{\"name\": \"Vestvegr Evenwood\"}")
             .exchange()
