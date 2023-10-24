@@ -5,6 +5,8 @@ import com.peterczigany.profileservice.model.Student;
 import com.peterczigany.profileservice.repository.StudentRepository;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -78,7 +80,20 @@ class StudentHttpTest {
         .jsonPath("$.name")
         .isEqualTo("Joe")
         .jsonPath("$.email")
-        .isEqualTo("joe@school.com")
-    ;
+        .isEqualTo("joe@school.com");
+  }
+
+  @ParameterizedTest
+  @CsvSource({"Joe,joe@school@com", ",joe@school.com"})
+  void addNewStudentValidationFails(String name, String email) throws Exception {
+    Student student = new Student(null, name, email);
+
+    client
+        .post()
+        .uri("http://localhost:8080/students")
+        .body(Mono.just(student), Student.class)
+        .exchange()
+        .expectStatus()
+        .isBadRequest();
   }
 }
