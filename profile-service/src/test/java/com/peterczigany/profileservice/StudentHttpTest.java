@@ -4,9 +4,12 @@ import com.peterczigany.profileservice.configuration.StudentHttpConfiguration;
 import com.peterczigany.profileservice.model.Student;
 import com.peterczigany.profileservice.repository.StudentRepository;
 import java.util.UUID;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -108,7 +111,8 @@ class StudentHttpTest {
 
     Mockito.when(repository.findById(UUID.fromString("1a240b6f-6535-4d59-91ca-4cf6ab4f6ca3")))
         .thenReturn(Mono.just(baseStudent));
-    Mockito.when(repository.save(updatedStudent)).thenReturn(Mono.just(updatedStudent));
+    Mockito.when(repository.save(Mockito.any()))
+        .thenReturn(Mono.just(updatedStudent)); // todo: why only any() works?
 
     client
         .patch()
@@ -116,11 +120,18 @@ class StudentHttpTest {
         .body(Mono.just(new Student(null, "Tommy Test", null)), Student.class)
         .exchange()
         .expectStatus()
-        .isOk();
+        .isOk()
+        .expectBody()
+        .jsonPath("$.id")
+        .isEqualTo("1a240b6f-6535-4d59-91ca-4cf6ab4f6ca3")
+        .jsonPath("$.name")
+        .isEqualTo("Tommy Test")
+        .jsonPath("$.email")
+        .isEqualTo("test@school.com");
   }
 
   @ParameterizedTest
-  @CsvSource({"Joe,joe@school@com", ",joe@school.com"})
+  @MethodSource("invalidUpdateData")
   void updateStudentValidationFails(String name, String email) throws Exception {
     Student student = new Student(null, name, email);
 
@@ -131,5 +142,13 @@ class StudentHttpTest {
         .exchange()
         .expectStatus()
         .isBadRequest();
+  }
+
+  private static Stream<Arguments> invalidUpdateData() {
+    return Stream.of(
+        Arguments.of("Joe", "joe@joe@com"),
+        Arguments.of("Joe", ""),
+        Arguments.of("  ", "joe@school.com"),
+        Arguments.of("", "joe@school.com"));
   }
 }

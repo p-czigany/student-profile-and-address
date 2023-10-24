@@ -4,10 +4,9 @@ import com.peterczigany.profileservice.dto.StudentDTO;
 import com.peterczigany.profileservice.model.Student;
 import java.util.regex.Pattern;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-public class StudentValidator implements Validator {
+public class StudentPatchValidator implements Validator {
 
   private static final String EMAIL = "email";
 
@@ -18,9 +17,10 @@ public class StudentValidator implements Validator {
 
   @Override
   public void validate(Object target, Errors errors) {
-    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "field.required");
-    ValidationUtils.rejectIfEmptyOrWhitespace(errors, EMAIL, "field.required");
     StudentDTO student = (StudentDTO) target;
+    if (student.getName() != null && student.getName().isBlank()) {
+      errors.rejectValue("name", "field.format", "The name must not be blank");
+    }
     if (student.getEmail() != null
         && !Pattern.compile(
                 "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$")
