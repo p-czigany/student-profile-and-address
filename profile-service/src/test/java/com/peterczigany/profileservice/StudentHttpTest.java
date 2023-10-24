@@ -96,4 +96,40 @@ class StudentHttpTest {
         .expectStatus()
         .isBadRequest();
   }
+
+  @Test
+  void updateStudent() {
+
+    Student baseStudent =
+        new Student(
+            UUID.fromString("1a240b6f-6535-4d59-91ca-4cf6ab4f6ca3"), "Tommy", "test@school.com");
+    Student updatedStudent = new Student(baseStudent);
+    updatedStudent.setName("Tommy Test");
+
+    Mockito.when(repository.findById(UUID.fromString("1a240b6f-6535-4d59-91ca-4cf6ab4f6ca3")))
+        .thenReturn(Mono.just(baseStudent));
+    Mockito.when(repository.save(updatedStudent)).thenReturn(Mono.just(updatedStudent));
+
+    client
+        .patch()
+        .uri("http://localhost:8080/students/1a240b6f-6535-4d59-91ca-4cf6ab4f6ca3")
+        .body(Mono.just(new Student(null, "Tommy Test", null)), Student.class)
+        .exchange()
+        .expectStatus()
+        .isOk();
+  }
+
+  @ParameterizedTest
+  @CsvSource({"Joe,joe@school@com", ",joe@school.com"})
+  void updateStudentValidationFails(String name, String email) throws Exception {
+    Student student = new Student(null, name, email);
+
+    client
+        .patch()
+        .uri("http://localhost:8080/students/1a240b6f-6535-4d59-91ca-4cf6ab4f6ca3")
+        .body(Mono.just(student), Student.class)
+        .exchange()
+        .expectStatus()
+        .isBadRequest();
+  }
 }

@@ -16,4 +16,8 @@ public class Student {
   @Id private UUID id;
   private String name;
   private String email;
+
+  public Student(Student student) {
+    this(student.getId(), student.getName(), student.getEmail());
+  }
 }
