@@ -1,8 +1,9 @@
 package com.peterczigany.profileservice;
 
 import com.peterczigany.profileservice.configuration.StudentHttpConfiguration;
+import com.peterczigany.profileservice.controller.StudentController;
+import com.peterczigany.profileservice.dto.StudentDTO;
 import com.peterczigany.profileservice.model.Student;
-import com.peterczigany.profileservice.repository.StudentRepository;
 import java.util.UUID;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
@@ -24,14 +25,14 @@ import reactor.core.publisher.Mono;
 @Import(StudentHttpConfiguration.class)
 class StudentHttpTest {
 
-  @MockBean private StudentRepository repository;
+  @MockBean private StudentController controller;
 
   @Autowired private WebTestClient client;
 
   @Test
-  void getAllStudents() throws Exception {
+  void getAllStudents() {
 
-    Mockito.when(repository.findAll())
+    Mockito.when(controller.getAllStudents())
         .thenReturn(
             Flux.just(
                 new Student(
@@ -59,10 +60,10 @@ class StudentHttpTest {
   }
 
   @Test
-  void addNewStudent() throws Exception {
-    Student student = new Student(null, "Joe", "joe@school.com");
+  void addNewStudent() {
+    StudentDTO student = new StudentDTO("Joe", "joe@school.com");
 
-    Mockito.when(repository.save(student))
+    Mockito.when(controller.save(student))
         .thenReturn(
             Mono.just(
                 new Student(
@@ -88,7 +89,7 @@ class StudentHttpTest {
 
   @ParameterizedTest
   @CsvSource({"Joe,joe@school@com", ",joe@school.com"})
-  void addNewStudentValidationFails(String name, String email) throws Exception {
+  void addNewStudentValidationFails(String name, String email) {
     Student student = new Student(null, name, email);
 
     client
@@ -106,13 +107,13 @@ class StudentHttpTest {
     Student baseStudent =
         new Student(
             UUID.fromString("1a240b6f-6535-4d59-91ca-4cf6ab4f6ca3"), "Tommy", "test@school.com");
+    StudentDTO request = new StudentDTO("Tommy Test", null);
+
     Student updatedStudent = new Student(baseStudent);
     updatedStudent.setName("Tommy Test");
 
-    Mockito.when(repository.findById(UUID.fromString("1a240b6f-6535-4d59-91ca-4cf6ab4f6ca3")))
-        .thenReturn(Mono.just(baseStudent));
-    Mockito.when(repository.save(Mockito.any()))
-        .thenReturn(Mono.just(updatedStudent)); // todo: why only any() works?
+    Mockito.when(controller.updateStudent("1a240b6f-6535-4d59-91ca-4cf6ab4f6ca3", request))
+        .thenReturn(Mono.just(updatedStudent));
 
     client
         .patch()
@@ -132,7 +133,7 @@ class StudentHttpTest {
 
   @ParameterizedTest
   @MethodSource("invalidUpdateData")
-  void updateStudentValidationFails(String name, String email) throws Exception {
+  void updateStudentValidationFails(String name, String email) {
     Student student = new Student(null, name, email);
 
     client
