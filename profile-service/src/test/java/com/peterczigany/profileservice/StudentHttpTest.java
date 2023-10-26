@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -129,6 +130,28 @@ class StudentHttpTest {
         .isEqualTo("Tommy Test")
         .jsonPath("$.email")
         .isEqualTo("test@school.com");
+  }
+
+  @Test
+  void updateStudentFails_whenIdNotFound() {
+    Student baseStudent =
+        new Student(
+            UUID.fromString("1a240b6f-6535-4d59-91ca-4cf6ab4f6ca3"), "Tommy", "test@school.com");
+    StudentDTO request = new StudentDTO("Tommy Test", null);
+
+    Student updatedStudent = new Student(baseStudent);
+    updatedStudent.setName("Tommy Test");
+
+    Mockito.when(controller.updateStudent("1a240b6f-6535-4d59-91ca-4cf6ab4f6ca3", request))
+        .thenReturn(Mono.empty());
+
+    client
+        .patch()
+        .uri("http://localhost:8080/students/1a240b6f-6535-4d59-91ca-4cf6ab4f6ca3")
+        .body(Mono.just(new Student(null, "Tommy Test", null)), Student.class)
+        .exchange()
+        .expectStatus()
+        .isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
   }
 
   @ParameterizedTest
