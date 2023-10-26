@@ -73,4 +73,21 @@ class StudentControllerTest {
         .expectComplete()
         .verify();
   }
+
+  @Test
+  void failToUpdateStudent() {
+
+    Student baseStudent =
+        new Student(
+            UUID.fromString("1a240b6f-6535-4d59-91ca-4cf6ab4f6ca3"), "Tommy", "test@school.com");
+    Student updatedStudent = new Student(baseStudent);
+    updatedStudent.setName("Tommy Test");
+    StudentDTO request = new StudentDTO("Tommy Test", null);
+
+    Mockito.when(repository.findById(UUID.fromString("1a240b6f-6535-4d59-91ca-4cf6ab4f6ca2")))
+        .thenReturn(Mono.empty());
+
+    StepVerifier.create(subject.updateStudent("1a240b6f-6535-4d59-91ca-4cf6ab4f6ca2", request))
+        .verifyComplete();
+  }
 }
