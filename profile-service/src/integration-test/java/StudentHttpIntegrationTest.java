@@ -8,6 +8,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -194,7 +196,20 @@ class StudentHttpIntegrationTest {
   }
 
   @Test
-  void failToDelete_whenIdIsNotFound() {}
+  void testFailToPatchNonExistent() {
+    testClient
+        .patch()
+        .uri("/students/" + "0891583f-8d86-43bf-b6ef-941728820f0f")
+        .contentType(MediaType.APPLICATION_JSON)
+        .bodyValue("{\"name\": \"Vestvegr Evenwood\"}")
+        .exchange()
+        //        .expectStatus().isEqualTo(HttpStatusCode.valueOf(422));
+        .expectStatus()
+        .isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
+  }
+
+  @Test
+  void testFailToDelete_whenIdIsNotFound() {}
 
   @Test
   void testPostAndDelete() {
