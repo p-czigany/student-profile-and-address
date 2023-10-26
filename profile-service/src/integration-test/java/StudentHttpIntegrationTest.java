@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -209,7 +208,15 @@ class StudentHttpIntegrationTest {
   }
 
   @Test
-  void testFailToDelete_whenIdIsNotFound() {}
+  void testFailToDelete_whenIdIsNotFound() {
+
+    testClient
+        .delete()
+        .uri("/students/" + "0891583f-8d86-43bf-b6ef-941728820f0f")
+        .exchange()
+        .expectStatus()
+        .isEqualTo(HttpStatus.NOT_FOUND);
+  }
 
   @Test
   void testPostAndDelete() {
@@ -227,12 +234,11 @@ class StudentHttpIntegrationTest {
             .getResponseBody();
 
     assert returnedStudent != null;
-    var returnedModifiedStudent =
-        testClient
-            .delete()
-            .uri("/students/" + returnedStudent.getId())
-            .exchange()
-            .expectStatus()
-            .isNoContent();
+    testClient
+        .delete()
+        .uri("/students/" + returnedStudent.getId())
+        .exchange()
+        .expectStatus()
+        .isNoContent();
   }
 }
