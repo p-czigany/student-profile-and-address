@@ -196,7 +196,7 @@ class StudentHttpIntegrationTest {
   }
 
   @Test
-  void testFailToPatchNonExistent() {
+  void testFailToPatch_whenIdIsNotFound() {
     testClient
         .patch()
         .uri("/students/" + "0891583f-8d86-43bf-b6ef-941728820f0f")
