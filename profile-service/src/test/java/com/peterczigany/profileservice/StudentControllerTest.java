@@ -11,6 +11,8 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -69,7 +71,11 @@ class StudentControllerTest {
     Mockito.when(repository.save(Mockito.any())).thenAnswer(i -> Mono.just(i.getArgument(0)));
 
     StepVerifier.create(subject.updateStudent("1a240b6f-6535-4d59-91ca-4cf6ab4f6ca3", request))
-        .expectNext(updatedStudent)
+        .expectNext(
+            (ServerResponse)
+                ServerResponse.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(updatedStudent))
         .expectComplete()
         .verify();
   }

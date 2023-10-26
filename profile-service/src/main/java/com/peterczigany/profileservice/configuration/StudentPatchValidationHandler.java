@@ -25,19 +25,19 @@ public class StudentPatchValidationHandler
   @Override
   protected Mono<ServerResponse> processBody(StudentDTO validBody, ServerRequest originalRequest) {
     return controller
-        .updateStudent(originalRequest.pathVariable("id"), validBody)
-        .switchIfEmpty(
-            Mono.error(
-                new ResponseStatusException(
-                    HttpStatus.UNPROCESSABLE_ENTITY, "No student is found with the given id.")))
-        .flatMap(
-            student ->
-                ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(student))
-        .onErrorResume(
-            ResponseStatusException.class,
-            ex ->
-                ServerResponse.status(ex.getStatusCode())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(ex.getReason()));
+        .updateStudent(originalRequest.pathVariable("id"), validBody);
+//        .switchIfEmpty(
+//            Mono.error(
+//                new ResponseStatusException(
+//                    HttpStatus.UNPROCESSABLE_ENTITY, "No student is found with the given id.")))
+//        .flatMap(
+//            student ->
+//                ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(student))
+//        .onErrorResume(
+//            ResponseStatusException.class,
+//            ex ->
+//                ServerResponse.status(ex.getStatusCode())
+//                    .contentType(MediaType.APPLICATION_JSON)
+//                    .bodyValue(ex.getReason()));
   }
 }
