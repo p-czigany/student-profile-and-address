@@ -193,6 +193,7 @@ class StudentHttpIntegrationTest {
     assert returnedModifiedStudent != null;
     Assertions.assertThat(returnedModifiedStudent.getId()).isEqualTo(returnedStudent.getId());
     Assertions.assertThat(returnedModifiedStudent.getName()).isEqualTo("Vestvegr Evenwood");
+    Assertions.assertThat(returnedModifiedStudent.getEmail()).isEqualTo("vestri@avernus.com");
   }
 
   @Test
