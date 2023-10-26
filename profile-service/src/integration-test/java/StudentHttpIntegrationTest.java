@@ -192,4 +192,32 @@ class StudentHttpIntegrationTest {
     Assertions.assertThat(returnedModifiedStudent.getId()).isEqualTo(returnedStudent.getId());
     Assertions.assertThat(returnedModifiedStudent.getName()).isEqualTo("Vestvegr Evenwood");
   }
+
+  @Test
+  void failToDelete_whenIdIsNotFound() {}
+
+  @Test
+  void testPostAndDelete() {
+    var returnedStudent =
+        testClient
+            .post()
+            .uri("/students")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue("{\"name\": \"Vestri\", \"email\": \"vestri@avernus.com\"}")
+            .exchange()
+            .expectStatus()
+            .isOk()
+            .expectBody(Student.class)
+            .returnResult()
+            .getResponseBody();
+
+    assert returnedStudent != null;
+    var returnedModifiedStudent =
+        testClient
+            .delete()
+            .uri("/students/" + returnedStudent.getId())
+            .exchange()
+            .expectStatus()
+            .isNoContent();
+  }
 }
