@@ -203,7 +203,6 @@ class StudentHttpIntegrationTest {
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue("{\"name\": \"Vestvegr Evenwood\"}")
         .exchange()
-        //        .expectStatus().isEqualTo(HttpStatusCode.valueOf(422));
         .expectStatus()
         .isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
   }
