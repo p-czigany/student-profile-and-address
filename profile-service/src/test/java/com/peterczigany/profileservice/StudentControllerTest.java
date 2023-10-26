@@ -66,8 +66,7 @@ class StudentControllerTest {
 
     Mockito.when(repository.findById(UUID.fromString("1a240b6f-6535-4d59-91ca-4cf6ab4f6ca3")))
         .thenReturn(Mono.just(baseStudent));
-    Mockito.when(repository.save(Mockito.any()))
-        .thenReturn(Mono.just(updatedStudent)); // todo: why only any() works?
+    Mockito.when(repository.save(Mockito.any())).thenAnswer(i -> Mono.just(i.getArgument(0)));
 
     StepVerifier.create(subject.updateStudent("1a240b6f-6535-4d59-91ca-4cf6ab4f6ca3", request))
         .expectNext(updatedStudent)
